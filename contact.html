@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Silverpoint Global</title>
+  <meta name="description" content="Contact Silverpoint Global. Strategic partnerships, media, and network access inquiries." />
+  <link rel="stylesheet" href="css/oz-web.css" />
+  <style>
+    #bg-canvas {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0; opacity: 0.45;
+    }
+
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-top: 60px;
+      align-items: start;
+    }
+
+    @media (max-width: 800px) {
+      .contact-layout { grid-template-columns: 1fr; }
+    }
+
+    /* Contact reason cards */
+    .reason-card {
+      padding: 32px;
+      cursor: default;
+    }
+
+    .reason-num {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(130,158,205,0.35);
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .reason-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(210,226,250,0.88);
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .reason-body {
+      font-size: 14px;
+      color: rgba(140,165,210,0.55);
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+
+    .reason-link {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: rgba(160,195,240,0.60);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 150ms;
+    }
+
+    .reason-link:hover { color: rgba(190,218,255,0.88); }
+    .reason-link::after { content: '→'; }
+
+    /* Contact form */
+    .contact-form-wrap {
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-form-header {
+      margin-bottom: 36px;
+    }
+
+    .contact-form-header h2 {
+      font-family: system-ui,-apple-system,sans-serif;
+      font-size: 28px;
+      font-weight: 300;
+      color: rgba(215,228,252,0.92);
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    .contact-form-header p {
+      font-size: 14px;
+      color: rgba(140,165,210,0.55);
+      line-height: 1.65;
+    }
+
+    /* Partner logos placeholder */
+    .partner-grid {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 40px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(200,215,235,0.07);
+    }
+
+    .partner-slot {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(130,155,200,0.25);
+      border: 1px solid rgba(180,205,235,0.08);
+      padding: 8px 20px;
+      border-radius: 6px;
+    }
+
+    /* Locations */
+    .locations-row {
+      display: flex;
+      gap: 48px;
+      flex-wrap: wrap;
+      margin-top: 52px;
+    }
+
+    .location-item {}
+    .location-city {
+      font-family: system-ui,-apple-system,sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(200,218,248,0.75);
+      margin-bottom: 4px;
+    }
+
+    .location-detail {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: rgba(130,155,200,0.38);
+    }
+
+    /* Success */
+    .contact-success {
+      display: none;
+      text-align: center;
+      padding: 48px 24px;
+    }
+    .contact-success.visible { display: block; }
+    .contact-success h3 {
+      font-size: 22px;
+      font-weight: 300;
+      color: rgba(215,228,252,0.92);
+      margin-bottom: 12px;
+    }
+    .contact-success p {
+      font-size: 14px;
+      color: rgba(140,165,210,0.55);
+      line-height: 1.65;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- ── Navigation ──────────────────────────────────────── -->
+  <nav class="oz-nav" id="oz-nav">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="14" stroke="rgba(200,218,245,0.35)" stroke-width="0.8"/>
+          <circle cx="16" cy="16" r="9"  stroke="rgba(190,212,245,0.50)" stroke-width="0.8"/>
+          <circle cx="16" cy="16" r="3"  fill="rgba(210,228,255,0.85)"/>
+          <line x1="16" y1="2"  x2="16" y2="7"  stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+          <line x1="16" y1="25" x2="16" y2="30" stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+          <line x1="2"  y1="16" x2="7"  y2="16" stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+          <line x1="25" y1="16" x2="30" y2="16" stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div>
+        <span class="nav-logo-text">OZ</span>
+        <span class="nav-logo-sub">Intelligence System</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="oz-system.html">The System</a></li>
+      <li><a href="founding-access.html">Access</a></li>
+      <li><a href="company.html">Company</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+      <li><a href="demo.html" class="nav-cta">Request Demo</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ── Page Hero ─────────────────────────────────────── -->
+    <div class="page-hero">
+      <div class="section-label">Intelligence Network</div>
+      <h1 class="section-headline animate-in">
+        Connect with<br><strong>Silverpoint Global.</strong>
+      </h1>
+      <p class="section-sub animate-in delay-1">
+        For network access, strategic partnerships, media inquiries, and general correspondence.
+        We respond to all qualified inquiries within one business day.
+      </p>
+    </div>
+
+    <div class="accent-line"></div>
+
+    <!-- ── Contact Reasons + Form ─────────────────────────── -->
+    <section class="section">
+      <div class="contact-layout">
+
+        <!-- Left: Reasons to contact -->
+        <div>
+          <div class="section-label" style="margin-bottom:32px;">Inquiry Types</div>
+
+          <div class="glass-card reason-card animate-in-scroll" style="margin-bottom:16px;">
+            <span class="reason-num">Priority</span>
+            <div class="reason-title">Founding Seat Inquiry</div>
+            <p class="reason-body">
+              Interested in The Founding Ten or Founding Operator program.
+              Begin with a private demo to determine fit and discuss terms.
+            </p>
+            <a href="demo.html" class="reason-link">Request Demo Access</a>
+          </div>
+
+          <div class="glass-card reason-card animate-in-scroll delay-1" style="margin-bottom:16px;">
+            <span class="reason-num">Strategic</span>
+            <div class="reason-title">Strategic Partnerships</div>
+            <p class="reason-body">
+              Data partnerships, technology integrations, channel partnerships,
+              and strategic alliance inquiries. Contact us directly to open a conversation.
+            </p>
+            <a href="#contact-form" class="reason-link">Send Inquiry</a>
+          </div>
+
+          <div class="glass-card reason-card animate-in-scroll delay-2" style="margin-bottom:16px;">
+            <span class="reason-num">Press</span>
+            <div class="reason-title">Media & Press</div>
+            <p class="reason-body">
+              Journalists, analysts, and researchers covering AI, revenue intelligence,
+              and the future of sales technology. We engage with qualified media requests.
+            </p>
+            <a href="#contact-form" class="reason-link">Media Inquiry</a>
+          </div>
+
+          <div class="glass-card reason-card animate-in-scroll delay-3">
+            <span class="reason-num">General</span>
+            <div class="reason-title">General Correspondence</div>
+            <p class="reason-body">
+              All other inquiries — career interest, technical questions, and
+              any other correspondence directed to the Silverpoint Global team.
+            </p>
+            <a href="#contact-form" class="reason-link">Send Message</a>
+          </div>
+        </div>
+
+        <!-- Right: Contact Form -->
+        <div class="contact-form-wrap" id="contact-form">
+          <div class="glass-card" style="padding:48px;">
+
+            <form class="oz-form" id="contact-form-el" novalidate>
+              <div class="contact-form-header">
+                <span style="font-family:'SF Mono','Fira Code',monospace;font-size:9px;letter-spacing:0.28em;text-transform:uppercase;color:rgba(130,160,210,0.40);display:block;margin-bottom:10px;">
+                  <span class="status-dot" style="margin-right:6px;"></span>
+                  Secure Contact Channel
+                </span>
+                <h2>Send a Message</h2>
+                <p>All inquiries reviewed by the founding team.</p>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <div class="form-group">
+                  <label class="form-label" for="c-name">Name</label>
+                  <input class="form-input" id="c-name" name="name" type="text" placeholder="Your name" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="c-org">Organization</label>
+                  <input class="form-input" id="c-org" name="org" type="text" placeholder="Company" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="c-email">Email</label>
+                <input class="form-input" id="c-email" name="email" type="email" placeholder="you@company.com" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="c-subject">Subject</label>
+                <select class="form-select" id="c-subject" name="subject">
+                  <option value="" disabled selected>Select inquiry type</option>
+                  <option value="founding">Founding Seat Inquiry</option>
+                  <option value="partnership">Strategic Partnership</option>
+                  <option value="media">Media / Press</option>
+                  <option value="general">General Correspondence</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="c-message">Message</label>
+                <textarea
+                  class="form-input"
+                  id="c-message"
+                  name="message"
+                  rows="5"
+                  placeholder="Describe your inquiry..."
+                  required
+                  style="resize:vertical;min-height:120px;font-family:inherit;"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
+                Send Message
+              </button>
+
+            </form>
+
+            <div class="contact-success" id="contact-success">
+              <div style="width:48px;height:48px;margin:0 auto 20px;border-radius:50%;border:1px solid rgba(130,210,185,0.25);display:flex;align-items:center;justify-content:center;background:rgba(100,190,165,0.04);">
+                <div style="width:10px;height:10px;border-radius:50%;background:rgba(130,210,185,0.75);box-shadow:0 0 14px rgba(130,210,185,0.45);"></div>
+              </div>
+              <h3>Message received.</h3>
+              <p>We review all inquiries personally. Expect a response within one business day for qualified requests.</p>
+              <span style="font-family:'SF Mono','Fira Code',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(130,210,185,0.50);display:block;margin-top:20px;">
+                <span class="status-dot" style="margin-right:8px;"></span>
+                Intelligence Network Active
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ── Location + Partnership ─────────────────────────── -->
+    <section class="section">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;">
+
+        <div class="animate-in-scroll">
+          <div class="section-label">Presence</div>
+          <h2 class="section-headline" style="font-size:clamp(24px,3vw,36px);margin-bottom:16px;">
+            Operating<br><strong>globally.</strong>
+          </h2>
+          <div class="locations-row">
+            <div class="location-item">
+              <div class="location-city">United States</div>
+              <div class="location-detail">Primary Operations</div>
+            </div>
+            <div class="location-item">
+              <div class="location-city">Network</div>
+              <div class="location-detail">Global Signal Coverage</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="animate-in-scroll delay-1">
+          <div class="section-label">Partners</div>
+          <h2 class="section-headline" style="font-size:clamp(24px,3vw,36px);margin-bottom:16px;">
+            Strategic<br><strong>integration.</strong>
+          </h2>
+          <p style="font-size:14px;color:rgba(140,165,210,0.50);line-height:1.7;margin-bottom:16px;">
+            Oz integrates with leading data providers, CRM systems, and economic intelligence
+            sources to deliver the most comprehensive signal coverage available.
+          </p>
+          <div class="partner-grid">
+            <span class="partner-slot">Data Partners</span>
+            <span class="partner-slot">CRM Integrations</span>
+            <span class="partner-slot">API Access</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Footer ─────────────────────────────────────────── -->
+    <footer class="oz-footer">
+      <span class="footer-copy">© 2026 Silverpoint Global / Wolfe Vision Group. All rights reserved.</span>
+      <ul class="footer-links">
+        <li><a href="company.html">Company</a></li>
+        <li><a href="demo.html">Demo Access</a></li>
+        <li><a href="founding-access.html">Access Tiers</a></li>
+      </ul>
+    </footer>
+
+  </div>
+
+  <script src="js/oz-nav.js"></script>
+  <script>
+    document.getElementById('contact-form-el').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name    = document.getElementById('c-name').value.trim();
+      const email   = document.getElementById('c-email').value.trim();
+      const message = document.getElementById('c-message').value.trim();
+      if (!name || !email || !message) return;
+      const formEl = document.getElementById('contact-form-el');
+      formEl.style.opacity    = '0';
+      formEl.style.transition = 'opacity 0.4s';
+      setTimeout(() => {
+        formEl.style.display = 'none';
+        const success = document.getElementById('contact-success');
+        success.classList.add('visible');
+        success.style.opacity    = '0';
+        success.style.transition = 'opacity 0.5s';
+        setTimeout(() => success.style.opacity = '1', 40);
+      }, 400);
+    });
+  </script>
+</body>
+</html>

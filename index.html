@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silverpoint Global | Business Funding Solutions</title>
+<meta name="description" content="Silverpoint Global provides business funding solutions from $10K to $10M. Working capital, equipment financing, revenue-based lending, SBA loans, and lines of credit. Funded in days, not months.">
+<meta property="og:title" content="Silverpoint Global | Business Funding Solutions">
+<meta property="og:description" content="Capital. Strategy. Infrastructure. Business funding from $10K to $10M, funded in days.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://silverpointglobal.com">
+<meta property="og:image" content="https://silverpointglobal.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%230A0A0A'/><text x='50%25' y='58%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='22' font-weight='700' fill='%2300D4FF'>S</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#0A0A0A;--bg-card:#111111;--bg-card-hover:#161616;
+--text-primary:#EDEDED;--text-secondary:#9A9A9A;--text-muted:#666666;
+--gold:#00D4FF;--gold-dim:rgba(0,212,255,0.12);--gold-glow:rgba(0,212,255,0.25);
+--font-headline:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;--font-data:'DM Mono',monospace;
+--nav-h:72px;--section-pad:clamp(80px,12vh,160px);
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{background:var(--bg);color:var(--text-primary);font-family:var(--font-body);line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit;background:none;border:none;outline:none}
+::selection{background:var(--gold);color:var(--bg)}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#555}
+
+/* ── NAV ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,4vw,64px);transition:background .4s,border-color .4s,backdrop-filter .4s;border-bottom:1px solid transparent}
+.nav.scrolled{background:rgba(10,10,10,0.92);backdrop-filter:blur(20px);border-bottom-color:rgba(0,212,255,0.08)}
+.nav-logo{font-family:var(--font-headline);font-weight:700;font-size:clamp(14px,1.2vw,18px);letter-spacing:3px;color:var(--text-primary)}
+.nav-links{display:flex;align-items:center;gap:clamp(20px,3vw,40px)}
+.nav-links a{font-family:var(--font-body);font-size:13px;letter-spacing:1.5px;color:var(--text-secondary);transition:color .3s;text-transform:uppercase;font-weight:500}
+.nav-links a:hover{color:var(--text-primary)}
+.nav-links a.nav-cta{border:1px solid var(--gold);padding:8px 20px;color:var(--gold);transition:all .3s}
+.nav-links a.nav-cta:hover{background:var(--gold);color:var(--bg)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px}
+.hamburger span{display:block;width:24px;height:1.5px;background:var(--text-primary);transition:all .3s}
+.hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;bottom:0;background:rgba(10,10,10,0.98);backdrop-filter:blur(20px);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:32px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-family:var(--font-headline);font-size:20px;letter-spacing:3px;color:var(--text-secondary);transition:color .3s;text-transform:uppercase}
+.mobile-menu a:hover{color:var(--gold)}
+
+@media(max-width:768px){
+.nav-links{display:none}
+.hamburger{display:flex}
+}
+
+/* ── SECTIONS ── */
+section{position:relative;padding:var(--section-pad) clamp(24px,6vw,120px)}
+.container{max-width:1200px;margin:0 auto;width:100%}
+
+/* ── VOID ENTRY ── */
+#void{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;overflow:hidden;position:relative}
+#void canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
+.void-content{position:relative;z-index:1;text-align:center;opacity:0;transform:translateY(10px)}
+.void-content.reveal{animation:voidReveal 1.5s ease forwards}
+.void-line{width:0;height:1px;background:var(--gold);margin:0 auto 40px;transition:none}
+.void-line.draw{animation:lineDraw 1s ease forwards}
+.void-title{font-family:var(--font-headline);font-size:clamp(28px,5vw,64px);font-weight:700;letter-spacing:clamp(6px,1.2vw,16px);color:var(--text-primary);margin-bottom:16px;text-transform:uppercase}
+.void-sub{font-family:var(--font-body);font-size:clamp(13px,1.2vw,18px);color:var(--text-secondary);letter-spacing:3px;font-weight:400}
+.scroll-indicator{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeInDelayed 2s ease 3s forwards}
+.scroll-indicator span{font-family:var(--font-data);font-size:10px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase}
+.scroll-line{width:1px;height:32px;position:relative;overflow:hidden}
+.scroll-line::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--gold);animation:scrollPulse 2s ease infinite}
+
+@keyframes lineDraw{from{width:0}to{width:min(320px,60vw)}}
+@keyframes voidReveal{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInDelayed{from{opacity:0}to{opacity:1}}
+@keyframes scrollPulse{0%{top:-100%}50%{top:0}100%{top:100%}}
+
+/* ── ANIMATE ON SCROLL ── */
+.anim{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease}
+.anim.visible{opacity:1;transform:translateY(0)}
+.anim-delay-1{transition-delay:.15s}
+.anim-delay-2{transition-delay:.3s}
+.anim-delay-3{transition-delay:.45s}
+.anim-delay-4{transition-delay:.6s}
+
+/* ── WHAT WE DO ── */
+#funding{min-height:100vh;display:flex;align-items:center}
+.funding-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,100px);align-items:center}
+.funding-text h2{font-family:var(--font-headline);font-size:clamp(32px,4vw,56px);font-weight:700;line-height:1.1;margin-bottom:24px}
+.funding-text p{color:var(--text-secondary);font-size:clamp(15px,1.1vw,18px);line-height:1.8;margin-bottom:32px;max-width:520px}
+.btn-gold{display:inline-block;font-family:var(--font-headline);font-size:13px;letter-spacing:3px;text-transform:uppercase;padding:16px 40px;border:1px solid var(--gold);color:var(--gold);background:transparent;cursor:pointer;transition:all .4s;font-weight:600}
+.btn-gold:hover{background:var(--gold);color:var(--bg)}
+.stats-grid{display:flex;flex-direction:column;gap:40px}
+.stat-item{border-left:1px solid var(--gold-dim);padding-left:24px}
+.stat-number{font-family:var(--font-data);font-size:clamp(32px,3.5vw,52px);font-weight:500;color:var(--text-primary);line-height:1}
+.stat-label{font-family:var(--font-body);font-size:14px;color:var(--text-secondary);margin-top:8px;letter-spacing:1px}
+
+@media(max-width:768px){
+.funding-grid{grid-template-columns:1fr;text-align:center}
+.funding-text p{max-width:100%}
+.stats-grid{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:24px}
+.stat-item{border-left:none;border-top:1px solid var(--gold-dim);padding:16px 0 0;text-align:center;flex:1;min-width:140px}
+}
+
+/* ── HOW IT WORKS ── */
+#process{background:var(--bg)}
+.section-label{font-family:var(--font-data);font-size:11px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:12px}
+.section-title{font-family:var(--font-headline);font-size:clamp(28px,3.5vw,48px);font-weight:700;margin-bottom:clamp(40px,6vh,80px)}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3vw,48px)}
+.step{position:relative;padding:clamp(24px,2.5vw,40px);border:1px solid rgba(255,255,255,0.04);background:var(--bg-card);transition:border-color .4s,transform .4s}
+.step:hover{border-color:rgba(0,212,255,0.15);transform:translateY(-4px)}
+.step-num{font-family:var(--font-data);font-size:48px;font-weight:500;color:rgba(0,212,255,0.12);position:absolute;top:16px;right:20px;line-height:1}
+.step-icon{width:48px;height:48px;margin-bottom:20px;display:flex;align-items:center;justify-content:center}
+.step-icon svg{width:32px;height:32px;stroke:var(--gold);stroke-width:1.5;fill:none}
+.step h3{font-family:var(--font-headline);font-size:clamp(18px,1.5vw,24px);font-weight:700;letter-spacing:2px;margin-bottom:12px;text-transform:uppercase}
+.step p{color:var(--text-secondary);font-size:clamp(14px,1vw,16px);line-height:1.7}
+.process-note{text-align:center;margin-top:clamp(32px,4vh,56px);font-family:var(--font-data);font-size:13px;color:var(--text-muted);letter-spacing:1px}
+
+@media(max-width:768px){.steps-grid{grid-template-columns:1fr}}
+
+/* ── DIVISIONS ── */
+#divisions{background:var(--bg)}
+.divisions-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(16px,2vw,24px)}
+.division-card{position:relative;padding:clamp(32px,3vw,48px);border:1px solid rgba(255,255,255,0.04);background:var(--bg-card);overflow:hidden;transition:border-color .4s,transform .4s;min-height:220px;display:flex;flex-direction:column;justify-content:flex-end}
+.division-card:hover{border-color:rgba(0,212,255,0.2);transform:translateY(-2px)}
+.division-card::before{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);transition:width .6s ease}
+.division-card:hover::before{width:100%}
+.division-bg{position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.04;pointer-events:none;transition:opacity .4s}
+.division-card:hover .division-bg{opacity:0.07}
+.division-card h3{font-family:var(--font-headline);font-size:clamp(16px,1.4vw,22px);font-weight:700;letter-spacing:3px;margin-bottom:10px;text-transform:uppercase}
+.division-card p{color:var(--text-secondary);font-size:clamp(13px,0.95vw,15px);line-height:1.6;margin-bottom:20px;max-width:340px}
+.division-link{font-family:var(--font-data);font-size:11px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;transition:color .3s}
+.division-card:hover .division-link{color:var(--gold)}
+.card-grid-bg{position:absolute;top:0;right:0;width:60%;height:100%;background:repeating-linear-gradient(90deg,rgba(0,212,255,0.02) 0,rgba(0,212,255,0.02) 1px,transparent 1px,transparent 40px),repeating-linear-gradient(0deg,rgba(0,212,255,0.02) 0,rgba(0,212,255,0.02) 1px,transparent 1px,transparent 40px)}
+.card-angular-bg{position:absolute;top:50%;right:10%;width:120px;height:120px;border:1px solid rgba(0,212,255,0.05);transform:rotate(45deg) translateY(-50%)}
+
+@media(max-width:768px){.divisions-grid{grid-template-columns:1fr}}
+
+/* ── APPLICATION ── */
+#apply{background:var(--bg)}
+.form-wrapper{max-width:680px;margin:0 auto}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-family:var(--font-data);font-size:11px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase}
+.form-group input,.form-group select{background:var(--bg-card);border:1px solid rgba(255,255,255,0.06);padding:14px 16px;color:var(--text-primary);font-size:15px;transition:border-color .3s}
+.form-group input:focus,.form-group select:focus{border-color:var(--gold)}
+.form-group input::placeholder{color:var(--text-muted)}
+.form-group select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%239A9A9A' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:40px;cursor:pointer}
+.form-group select option{background:var(--bg);color:var(--text-primary)}
+.btn-submit{width:100%;margin-top:12px;font-family:var(--font-headline);font-size:14px;letter-spacing:3px;text-transform:uppercase;padding:18px;background:var(--gold);color:var(--bg);border:1px solid var(--gold);cursor:pointer;font-weight:700;transition:all .4s}
+.btn-submit:hover{background:transparent;color:var(--gold)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed}
+.form-success{display:none;text-align:center;padding:48px 24px}
+.form-success h3{font-family:var(--font-headline);font-size:24px;margin-bottom:12px;color:var(--gold)}
+.form-success p{color:var(--text-secondary);font-size:15px;line-height:1.7}
+.form-contact{text-align:center;margin-top:32px;font-size:14px;color:var(--text-muted);line-height:1.8}
+.form-contact a{color:var(--text-secondary);transition:color .3s}
+.form-contact a:hover{color:var(--gold)}
+.field-error{border-color:rgba(220,60,60,0.6) !important}
+.error-text{font-size:11px;color:rgba(220,60,60,0.8);font-family:var(--font-data);display:none}
+
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}}
+
+/* ── SOCIAL PROOF ── */
+#proof{background:var(--bg)}
+.proof-header{text-align:center;margin-bottom:clamp(40px,6vh,80px)}
+.proof-header h2{font-family:var(--font-headline);font-size:clamp(24px,3vw,40px);font-weight:700;margin-bottom:8px}
+.proof-header p{color:var(--text-secondary);font-size:15px;letter-spacing:1px}
+.testimonials{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,24px)}
+.testimonial{padding:clamp(24px,2.5vw,40px);border:1px solid rgba(255,255,255,0.04);background:var(--bg-card);transition:border-color .4s}
+.testimonial:hover{border-color:rgba(0,212,255,0.12)}
+.testimonial-quote{font-size:clamp(15px,1.1vw,17px);line-height:1.7;color:var(--text-primary);margin-bottom:20px;font-style:italic}
+.testimonial-quote::before{content:open-quote;font-family:var(--font-headline);font-size:28px;color:var(--gold);line-height:0;vertical-align:-8px;margin-right:4px}
+.testimonial-quote::after{content:close-quote;font-family:var(--font-headline);font-size:28px;color:var(--gold);line-height:0;vertical-align:-8px;margin-left:2px}
+.testimonial-author{font-family:var(--font-data);font-size:12px;color:var(--text-muted);letter-spacing:1px}
+
+@media(max-width:768px){.testimonials{grid-template-columns:1fr}}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid rgba(255,255,255,0.04);padding:clamp(40px,6vh,80px) clamp(24px,6vw,120px) 24px}
+.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:clamp(32px,4vw,64px);max-width:1200px;margin:0 auto;padding-bottom:clamp(32px,4vh,56px)}
+.footer-brand h3{font-family:var(--font-headline);font-size:16px;letter-spacing:3px;margin-bottom:12px;text-transform:uppercase}
+.footer-brand p{color:var(--text-muted);font-size:14px;line-height:1.7;max-width:300px}
+.footer-col h4{font-family:var(--font-data);font-size:11px;letter-spacing:3px;color:var(--text-muted);text-transform:uppercase;margin-bottom:16px}
+.footer-col a,.footer-col p{display:block;color:var(--text-secondary);font-size:14px;margin-bottom:10px;transition:color .3s}
+.footer-col a:hover{color:var(--gold)}
+.footer-bottom{max-width:1200px;margin:0 auto;border-top:1px solid rgba(255,255,255,0.04);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-bottom p{font-size:12px;color:var(--text-muted)}
+.footer-bottom .powered{font-family:var(--font-data);font-size:10px;letter-spacing:2px;color:var(--text-muted);opacity:.5}
+
+@media(max-width:768px){
+.footer-grid{grid-template-columns:1fr}
+.footer-bottom{flex-direction:column;text-align:center}
+}
+
+/* ── REDUCED MOTION ── */
+@media(prefers-reduced-motion:reduce){
+*,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important}
+html{scroll-behavior:auto}
+.anim{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a href="#void" class="nav-logo">SILVERPOINT GLOBAL</a>
+  <div class="nav-links">
+    <a href="#funding">Funding</a>
+    <a href="#process">About</a>
+    <a href="#divisions">Divisions</a>
+    <a href="#proof">Clients</a>
+    <a href="#apply" class="nav-cta">Apply</a>
+  </div>
+  <div class="hamburger" id="hamburger" aria-label="Menu" role="button" tabindex="0">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#funding" onclick="closeMobile()">Funding</a>
+  <a href="#process" onclick="closeMobile()">About</a>
+  <a href="#divisions" onclick="closeMobile()">Divisions</a>
+  <a href="#proof" onclick="closeMobile()">Clients</a>
+  <a href="#apply" onclick="closeMobile()">Apply</a>
+</div>
+
+<!-- VOID ENTRY -->
+<section id="void">
+  <canvas id="particleCanvas"></canvas>
+  <div class="void-content" id="voidContent">
+    <div class="void-line" id="voidLine"></div>
+    <h1 class="void-title">Silverpoint Global</h1>
+    <p class="void-sub">Capital. Strategy. Infrastructure.</p>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- WHAT WE DO -->
+<section id="funding">
+  <div class="container">
+    <div class="funding-grid">
+      <div class="funding-text anim">
+        <h2>We fund businesses.</h2>
+        <p>Working capital, equipment financing, revenue-based lending, SBA loans, lines of credit. From $10K to $10M. Funded in days, not months.</p>
+        <a href="#apply" class="btn-gold">Get Funded</a>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-item anim anim-delay-1">
+          <div class="stat-number" data-target="500" data-suffix="+">0</div>
+          <div class="stat-label">Businesses Funded</div>
+        </div>
+        <div class="stat-item anim anim-delay-2">
+          <div class="stat-number" data-target="47" data-prefix="$" data-suffix="M+">0</div>
+          <div class="stat-label">Capital Deployed</div>
+        </div>
+        <div class="stat-item anim anim-delay-3">
+          <div class="stat-number" data-target="3" data-suffix="-5 Day">0</div>
+          <div class="stat-label">Average Funding Time</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="process">
+  <div class="container">
+    <div class="anim">
+      <p class="section-label">How It Works</p>
+      <h2 class="section-title">Three steps to capital.</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step anim anim-delay-1">
+        <span class="step-num">01</span>
+        <div class="step-icon">
+          <svg viewBox="0 0 32 32"><rect x="6" y="4" width="20" height="24" rx="2"/><line x1="11" y1="11" x2="21" y2="11"/><line x1="11" y1="16" x2="21" y2="16"/><line x1="11" y1="21" x2="17" y2="21"/></svg>
+        </div>
+        <h3>Apply</h3>
+        <p>60-second application. Your business name, monthly revenue, and how much you need.</p>
+      </div>
+      <div class="step anim anim-delay-2">
+        <span class="step-num">02</span>
+        <div class="step-icon">
+          <svg viewBox="0 0 32 32"><circle cx="10" cy="16" r="4"/><circle cx="22" cy="10" r="3"/><circle cx="22" cy="22" r="3"/><line x1="14" y1="14" x2="19" y2="11"/><line x1="14" y1="18" x2="19" y2="21"/></svg>
+        </div>
+        <h3>Match</h3>
+        <p>Our system matches you with the right lenders from our network of 50+ funding partners.</p>
+      </div>
+      <div class="step anim anim-delay-3">
+        <span class="step-num">03</span>
+        <div class="step-icon">
+          <svg viewBox="0 0 32 32"><rect x="4" y="6" width="24" height="20" rx="2"/><line x1="4" y1="12" x2="28" y2="12"/><circle cx="20" cy="20" r="3"/><path d="M20 18v2l1.5 1"/></svg>
+        </div>
+        <h3>Fund</h3>
+        <p>Receive your capital in 3 to 5 business days. Sometimes faster.</p>
+      </div>
+    </div>
+    <p class="process-note anim anim-delay-4">No impact on your credit score to apply.</p>
+  </div>
+</section>
+
+<!-- DIVISIONS -->
+<section id="divisions">
+  <div class="container">
+    <div class="anim">
+      <p class="section-label">The Network</p>
+      <h2 class="section-title">Our divisions.</h2>
+    </div>
+    <div class="divisions-grid">
+      <div class="division-card anim anim-delay-1">
+        <div class="division-bg" style="background:linear-gradient(135deg,transparent 40%,rgba(0,212,255,0.03))"></div>
+        <h3>Silverpoint Capital</h3>
+        <p>Business funding and financial consulting. Direct capital access for growth-stage companies.</p>
+        <span class="division-link">Explore</span>
+      </div>
+      <div class="division-card anim anim-delay-2">
+        <div class="card-grid-bg"></div>
+        <h3>Ozymandias.OS</h3>
+        <p>AI-powered deal intelligence. Revenue operations that identify, execute, and scale.</p>
+        <span class="division-link">Explore</span>
+      </div>
+      <div class="division-card anim anim-delay-3">
+        <div class="division-bg" style="background:radial-gradient(ellipse at 80% 80%,rgba(255,255,255,0.02),transparent 60%)"></div>
+        <h3>Maison Noir</h3>
+        <p>Dark luxury fashion. Presence through restraint. Not everything is meant to be seen.</p>
+        <span class="division-link">Explore</span>
+      </div>
+      <div class="division-card anim anim-delay-4">
+        <div class="card-angular-bg"></div>
+        <h3>OGEN</h3>
+        <p>Tactical streetwear. Precision, evolution, readiness. Two modes of the same individual.</p>
+        <span class="division-link">Explore</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPLICATION -->
+<section id="apply">
+  <div class="container">
+    <div class="form-wrapper">
+      <div class="anim" style="text-align:center;margin-bottom:clamp(32px,4vh,56px)">
+        <p class="section-label">Get Started</p>
+        <h2 class="section-title" style="margin-bottom:0">Start Your Funding Application</h2>
+      </div>
+      <form id="appForm" class="anim anim-delay-1" novalidate>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="bizName">Business Legal Name *</label>
+            <input type="text" id="bizName" name="businessName" required placeholder="Company LLC">
+            <span class="error-text">Required</span>
+          </div>
+          <div class="form-group">
+            <label for="ownerName">Owner Full Name *</label>
+            <input type="text" id="ownerName" name="ownerName" required placeholder="John Smith">
+            <span class="error-text">Required</span>
+          </div>
+          <div class="form-group">
+            <label for="bizPhone">Business Phone *</label>
+            <input type="tel" id="bizPhone" name="phone" required placeholder="(555) 123-4567">
+            <span class="error-text">Valid phone required</span>
+          </div>
+          <div class="form-group">
+            <label for="bizEmail">Business Email *</label>
+            <input type="email" id="bizEmail" name="email" required placeholder="you@company.com">
+            <span class="error-text">Valid email required</span>
+          </div>
+          <div class="form-group">
+            <label for="revenue">Monthly Revenue *</label>
+            <select id="revenue" name="monthlyRevenue" required>
+              <option value="" disabled selected>Select range</option>
+              <option>Under $10K</option>
+              <option>$10K - $25K</option>
+              <option>$25K - $50K</option>
+              <option>$50K - $100K</option>
+              <option>$100K - $250K</option>
+              <option>$250K+</option>
+            </select>
+            <span class="error-text">Required</span>
+          </div>
+          <div class="form-group">
+            <label for="timeInBiz">Time in Business *</label>
+            <select id="timeInBiz" name="timeInBusiness" required>
+              <option value="" disabled selected>Select range</option>
+              <option>Less than 6 months</option>
+              <option>6 - 12 months</option>
+              <option>1 - 2 years</option>
+              <option>2 - 5 years</option>
+              <option>5+ years</option>
+            </select>
+            <span class="error-text">Required</span>
+          </div>
+          <div class="form-group">
+            <label for="amount">Amount Requested *</label>
+            <select id="amount" name="amountRequested" required>
+              <option value="" disabled selected>Select range</option>
+              <option>$10K - $25K</option>
+              <option>$25K - $50K</option>
+              <option>$50K - $100K</option>
+              <option>$100K - $250K</option>
+              <option>$250K - $500K</option>
+              <option>$500K+</option>
+            </select>
+            <span class="error-text">Required</span>
+          </div>
+          <div class="form-group">
+            <label for="purpose">Purpose of Funds *</label>
+            <select id="purpose" name="purpose" required>
+              <option value="" disabled selected>Select purpose</option>
+              <option>Working Capital</option>
+              <option>Equipment</option>
+              <option>Expansion</option>
+              <option>Inventory</option>
+              <option>Payroll</option>
+              <option>Debt Consolidation</option>
+              <option>Other</option>
+            </select>
+            <span class="error-text">Required</span>
+          </div>
+          <div class="form-group full">
+            <label for="industry">Industry</label>
+            <input type="text" id="industry" name="industry" placeholder="e.g. Construction, Restaurant, E-commerce">
+          </div>
+          <div class="form-group full">
+            <button type="submit" class="btn-submit" id="submitBtn">Submit Application</button>
+          </div>
+        </div>
+      </form>
+      <div class="form-success" id="formSuccess">
+        <h3>Application Received</h3>
+        <p>A funding specialist will contact you within 24 hours.</p>
+      </div>
+      <div class="form-contact anim anim-delay-2">
+        Questions? Contact us at <a href="mailto:contact@silverpointglobal.com">contact@silverpointglobal.com</a><br>
+        or <a href="tel:+13072288788">(307) 228-8788</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section id="proof">
+  <div class="container">
+    <div class="proof-header anim">
+      <p class="section-label">Results</p>
+      <h2>Trusted by businesses across 47 states.</h2>
+    </div>
+    <div class="testimonials">
+      <div class="testimonial anim anim-delay-1">
+        <p class="testimonial-quote">Ozymandias completely revitalized my business. They repaired my credit, built my website from scratch, and now manage all of my social media campaigns. Funding, marketing, operations, you name it, they handle it. I went from struggling to keep the trucks moving to running a fully optimized operation. I am never letting go of Ozymandias.OS. This system changed everything for me.</p>
+        <p class="testimonial-author">Monica Furtado, Owner / Stronger Transport LLC / Trucking</p>
+      </div>
+      <div class="testimonial anim anim-delay-2">
+        <p class="testimonial-quote">I came to Silverpoint looking for targeted leads for my insurance business. What I got was so much more. They delivered quality leads with unbelievable turnaround time, and when a few numbers came back invalid, they replaced them almost immediately. No questions asked. But the real game changer was the strategy. Oz built us a whole new approach to target a niche the insurance market had completely overlooked. Revenue nearly tripled in the first quarter. Go Oz go.</p>
+        <p class="testimonial-author">Anthony Jerome Lumpkin Jr, Owner / Lumpkins Final Expense Insurance</p>
+      </div>
+      <div class="testimonial anim anim-delay-3">
+        <p class="testimonial-quote">I already had the brokerage. I had reps, I had leads, I had lenders. What I did not have was a system that could maximize all the infrastructure and opportunity already in front of me. Oz completely revolutionized our format. He automated our lending process, streamlined our deal flow, and basically turned us into a money printing machine. The ROI was immediate. If you have the pieces but need the engine, this is it. Thank you, Silverpoint. Truly.</p>
+        <p class="testimonial-author">Jake Wolf, Managing Partner / Brava Group / Financial Services</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>Silverpoint Global</h3>
+      <p>Capital. Strategy. Infrastructure. Business funding solutions designed for growth.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <a href="#apply">Apply for Funding</a>
+      <a href="#process">How It Works</a>
+      <a href="#divisions">Our Divisions</a>
+      <a href="#proof">Client Results</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:contact@silverpointglobal.com">contact@silverpointglobal.com</a>
+      <a href="tel:+13072288788">(307) 228-8788</a>
+      <p style="color:var(--text-muted)">Fort Lauderdale, FL</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 Silverpoint Global Holdings LLC. All rights reserved.</p>
+    <span class="powered">Powered by Ozymandias.OS</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+var voidContent = document.getElementById('voidContent');
+var voidLine = document.getElementById('voidLine');
+
+setTimeout(function(){ voidLine.classList.add('draw'); }, 1500);
+setTimeout(function(){ voidContent.classList.add('reveal'); }, 2000);
+
+/* Particle Canvas */
+var canvas = document.getElementById('particleCanvas');
+var ctx = canvas.getContext('2d');
+var particles = [];
+var maxP = 40;
+var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+function P(){
+  this.x = Math.random() * canvas.width;
+  this.y = Math.random() * canvas.height;
+  this.vx = (Math.random() - 0.5) * 0.3;
+  this.vy = (Math.random() - 0.5) * 0.3;
+  this.r = Math.random() * 1.5 + 0.5;
+  this.a = Math.random() * 0.4 + 0.1;
+}
+for(var i = 0; i < maxP; i++) particles.push(new P());
+
+function draw(){
+  if(rm) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  var j, p, a, b, dx, dy, d;
+  for(j = 0; j < particles.length; j++){
+    p = particles[j];
+    p.x += p.vx; p.y += p.vy;
+    if(p.x < 0) p.x = canvas.width;
+    if(p.x > canvas.width) p.x = 0;
+    if(p.y < 0) p.y = canvas.height;
+    if(p.y > canvas.height) p.y = 0;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,212,255,' + p.a + ')';
+    ctx.fill();
+  }
+  for(a = 0; a < particles.length; a++){
+    for(b = a + 1; b < particles.length; b++){
+      dx = particles[a].x - particles[b].x;
+      dy = particles[a].y - particles[b].y;
+      d = Math.sqrt(dx*dx + dy*dy);
+      if(d < 150){
+        ctx.beginPath();
+        ctx.moveTo(particles[a].x, particles[a].y);
+        ctx.lineTo(particles[b].x, particles[b].y);
+        ctx.strokeStyle = 'rgba(0,212,255,' + (0.03 * (1 - d/150)) + ')';
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* Nav scroll */
+var nav = document.getElementById('nav');
+window.addEventListener('scroll', function(){
+  nav.classList.toggle('scrolled', window.pageYOffset > 60);
+}, {passive: true});
+
+/* Hamburger */
+var hb = document.getElementById('hamburger');
+var mm = document.getElementById('mobileMenu');
+hb.addEventListener('click', function(){ mm.classList.toggle('open'); hb.classList.toggle('open'); });
+window.closeMobile = function(){ mm.classList.remove('open'); hb.classList.remove('open'); };
+
+/* Scroll animations */
+var anims = document.querySelectorAll('.anim');
+if(!rm && 'IntersectionObserver' in window){
+  var ao = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('visible'); ao.unobserve(e.target); }
+    });
+  }, {threshold: 0.15, rootMargin: '0px 0px -40px 0px'});
+  anims.forEach(function(el){ ao.observe(el); });
+} else {
+  anims.forEach(function(el){ el.classList.add('visible'); });
+}
+
+/* Counters */
+var stats = document.querySelectorAll('.stat-number');
+var counted = false;
+function animC(el){
+  var t = parseInt(el.getAttribute('data-target'), 10);
+  var pre = el.getAttribute('data-prefix') || '';
+  var suf = el.getAttribute('data-suffix') || '';
+  var dur = 2000, s = performance.now();
+  function step(now){
+    var p = Math.min((now - s) / dur, 1);
+    var e = 1 - Math.pow(1 - p, 3);
+    el.textContent = pre + Math.round(e * t).toLocaleString() + suf;
+    if(p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+if('IntersectionObserver' in window){
+  var co = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !counted){ counted = true; stats.forEach(animC); co.disconnect(); }
+    });
+  }, {threshold: 0.3});
+  stats.forEach(function(el){ co.observe(el); });
+}
+
+/* Form */
+var form = document.getElementById('appForm');
+var submitBtn = document.getElementById('submitBtn');
+var formSuccess = document.getElementById('formSuccess');
+
+function vEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function vPhone(p){ return p.replace(/\D/g, '').length >= 10; }
+
+form.addEventListener('submit', function(ev){
+  ev.preventDefault();
+  var ok = true;
+  form.querySelectorAll('.form-group').forEach(function(g){
+    var inp = g.querySelector('input, select');
+    var err = g.querySelector('.error-text');
+    if(inp) inp.classList.remove('field-error');
+    if(err) err.style.display = 'none';
+  });
+  form.querySelectorAll('[required]').forEach(function(f){
+    var g = f.closest('.form-group');
+    var err = g.querySelector('.error-text');
+    var v = f.value.trim();
+    if(!v || (f.type === 'email' && !vEmail(v)) || (f.type === 'tel' && !vPhone(v))){
+      f.classList.add('field-error');
+      if(err) err.style.display = 'block';
+      ok = false;
+    }
+  });
+  if(!ok) return;
+
+  var data = {};
+  new FormData(form).forEach(function(v, k){ data[k] = v; });
+  data.source = 'silverpointglobal.com';
+  data.submittedAt = new Date().toISOString();
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'SUBMITTING...';
+
+  fetch('/api/intake/manual', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  })
+  .then(function(r){ if(!r.ok) throw new Error('err'); return r.json(); })
+  .then(done)
+  .catch(function(){
+    var s = encodeURIComponent('New Funding Application: ' + data.businessName);
+    var b = encodeURIComponent(
+      'Business: ' + data.businessName + '\nOwner: ' + data.ownerName +
+      '\nPhone: ' + data.phone + '\nEmail: ' + data.email +
+      '\nMonthly Revenue: ' + data.monthlyRevenue + '\nTime in Business: ' + data.timeInBusiness +
+      '\nAmount Requested: ' + data.amountRequested + '\nPurpose: ' + data.purpose +
+      '\nIndustry: ' + (data.industry || 'N/A') + '\nSubmitted: ' + data.submittedAt
+    );
+    window.location.href = 'mailto:submissions@silverpointglobal.com?subject=' + s + '&body=' + b;
+    done();
+  });
+
+  function done(){
+    form.style.display = 'none';
+    formSuccess.style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'SUBMIT APPLICATION';
+  }
+});
+
+/* Phone formatting */
+document.getElementById('bizPhone').addEventListener('input', function(){
+  var d = this.value.replace(/\D/g, '').substring(0, 10);
+  if(d.length >= 7) this.value = '(' + d.substring(0,3) + ') ' + d.substring(3,6) + '-' + d.substring(6);
+  else if(d.length >= 4) this.value = '(' + d.substring(0,3) + ') ' + d.substring(3);
+  else if(d.length > 0) this.value = '(' + d;
+});
+
+})();
+</script>
+</body>
+</html>

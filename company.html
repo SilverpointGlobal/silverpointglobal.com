@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Company — Silverpoint Global / Wolfe Vision Group</title>
+  <meta name="description" content="The organizations behind Oz Intelligence System — Silverpoint Global, Oz Intelligence, and Wolfe Vision Group." />
+  <link rel="stylesheet" href="css/oz-web.css" />
+  <style>
+    #bg-canvas {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0; opacity: 0.5;
+    }
+
+    /* Entity cards — full width stacked */
+    .entity-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 60px;
+      align-items: start;
+      padding: 52px 52px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 800px) {
+      .entity-card { grid-template-columns: 1fr; gap: 28px; padding: 36px 28px; }
+    }
+
+    .entity-left { position: relative; }
+
+    .entity-num {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(130,160,205,0.35);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .entity-name {
+      font-family: system-ui,-apple-system,sans-serif;
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 300;
+      color: rgba(215,228,252,0.95);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .entity-name strong { font-weight: 500; }
+
+    .entity-role-tag {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(150,185,230,0.50);
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    .entity-symbol {
+      width: 56px;
+      height: 56px;
+      margin-top: 28px;
+      opacity: 0.60;
+    }
+
+    .entity-right {}
+
+    .entity-headline {
+      font-family: system-ui,-apple-system,sans-serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: rgba(200,218,248,0.85);
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+      margin-bottom: 20px;
+    }
+
+    .entity-body {
+      font-size: 15px;
+      color: rgba(140,165,210,0.58);
+      line-height: 1.75;
+      margin-bottom: 24px;
+    }
+
+    .entity-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .entity-tag {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 9px;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: rgba(155,190,235,0.55);
+      border: 1px solid rgba(155,190,235,0.15);
+      padding: 4px 12px;
+      border-radius: 4px;
+    }
+
+    /* Entity-specific accent colors */
+    .entity-sps  { border-left: 2px solid rgba(180,210,245,0.20); }
+    .entity-oz   { border-left: 2px solid rgba(160,200,240,0.30); }
+    .entity-wvg  { border-left: 2px solid rgba(195,218,248,0.18); }
+
+    /* Mission section */
+    .mission-block {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    .mission-quote {
+      font-family: system-ui,-apple-system,sans-serif;
+      font-size: clamp(22px, 3.5vw, 36px);
+      font-weight: 200;
+      color: rgba(210,225,250,0.80);
+      line-height: 1.40;
+      letter-spacing: -0.02em;
+      margin-bottom: 32px;
+      font-style: italic;
+    }
+
+    .mission-attr {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(140,170,215,0.40);
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+      margin-top: 40px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(180deg, rgba(180,210,240,0.25) 0%, transparent 100%);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 36px;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -36px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(180,210,245,0.40);
+      border: 1px solid rgba(180,210,245,0.20);
+    }
+
+    .timeline-date {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: rgba(140,170,215,0.40);
+      margin-bottom: 6px;
+    }
+
+    .timeline-event {
+      font-size: 15px;
+      color: rgba(175,200,240,0.70);
+      line-height: 1.55;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- ── Navigation ──────────────────────────────────────── -->
+  <nav class="oz-nav" id="oz-nav">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="14" stroke="rgba(200,218,245,0.35)" stroke-width="0.8"/>
+          <circle cx="16" cy="16" r="9"  stroke="rgba(190,212,245,0.50)" stroke-width="0.8"/>
+          <circle cx="16" cy="16" r="3"  fill="rgba(210,228,255,0.85)"/>
+          <line x1="16" y1="2"  x2="16" y2="7"  stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+          <line x1="16" y1="25" x2="16" y2="30" stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+          <line x1="2"  y1="16" x2="7"  y2="16" stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+          <line x1="25" y1="16" x2="30" y2="16" stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div>
+        <span class="nav-logo-text">OZ</span>
+        <span class="nav-logo-sub">Intelligence System</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="oz-system.html">The System</a></li>
+      <li><a href="founding-access.html">Access</a></li>
+      <li><a href="company.html" class="active">Company</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="demo.html" class="nav-cta">Request Demo</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ── Page Hero ─────────────────────────────────────── -->
+    <div class="page-hero">
+      <div class="section-label">The Organizations</div>
+      <h1 class="section-headline animate-in">
+        Three entities.<br><strong>One mission.</strong>
+      </h1>
+      <p class="section-sub animate-in delay-1">
+        Silverpoint Global, Oz Intelligence System, and Wolfe Vision Group are the interconnected
+        organizations building the future of revenue intelligence.
+      </p>
+    </div>
+
+    <div class="accent-line"></div>
+
+    <!-- ── Entity Cards ───────────────────────────────────── -->
+    <section class="section">
+
+      <!-- Silverpoint Global -->
+      <div class="glass-card entity-card entity-sps animate-in-scroll">
+        <div class="entity-left">
+          <span class="entity-num">Entity 01</span>
+          <div class="entity-name"><strong>Silverpoint Global</strong><br>Solutions</div>
+          <span class="entity-role-tag">Parent Organization</span>
+          <svg class="entity-symbol" viewBox="0 0 56 56" fill="none">
+            <rect x="4" y="4" width="48" height="48" rx="4" stroke="rgba(195,218,248,0.30)" stroke-width="0.8"/>
+            <rect x="14" y="14" width="28" height="28" rx="2" stroke="rgba(185,210,245,0.35)" stroke-width="0.8"/>
+            <circle cx="28" cy="28" r="6" fill="rgba(200,222,255,0.50)"/>
+            <line x1="28" y1="4" x2="28" y2="14" stroke="rgba(190,215,248,0.30)" stroke-width="0.7"/>
+            <line x1="28" y1="42" x2="28" y2="52" stroke="rgba(190,215,248,0.30)" stroke-width="0.7"/>
+            <line x1="4" y1="28" x2="14" y2="28" stroke="rgba(190,215,248,0.30)" stroke-width="0.7"/>
+            <line x1="42" y1="28" x2="52" y2="28" stroke="rgba(190,215,248,0.30)" stroke-width="0.7"/>
+          </svg>
+        </div>
+        <div class="entity-right">
+          <p class="entity-headline">
+            The company building the infrastructure for the next era of revenue intelligence.
+          </p>
+          <p class="entity-body">
+            Silverpoint Global is the parent organization behind the Oz Intelligence System.
+            Founded on the conviction that the global economy generates far more signal than any
+            human team can process, Silverpoint Global has assembled a team of engineers, intelligence
+            architects, and revenue operators to build the system that closes that gap.
+          </p>
+          <p class="entity-body">
+            Silverpoint Global does not operate as a traditional SaaS company. We build strategic
+            intelligence infrastructure deployed with a select group of operating partners who
+            share our conviction about the future of AI-driven revenue operations.
+          </p>
+          <div class="entity-tags">
+            <span class="entity-tag">Intelligence Infrastructure</span>
+            <span class="entity-tag">AI Systems</span>
+            <span class="entity-tag">Revenue Architecture</span>
+            <span class="entity-tag">Strategic Partnerships</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Oz Intelligence System -->
+      <div class="glass-card entity-card entity-oz animate-in-scroll delay-1">
+        <div class="entity-left">
+          <span class="entity-num">Entity 02</span>
+          <div class="entity-name"><strong>Oz</strong><br>Intelligence System</div>
+          <span class="entity-role-tag">The Platform</span>
+          <svg class="entity-symbol" viewBox="0 0 56 56" fill="none">
+            <circle cx="28" cy="28" r="22" stroke="rgba(185,212,248,0.32)" stroke-width="0.8"/>
+            <circle cx="28" cy="28" r="14" stroke="rgba(190,215,248,0.38)" stroke-width="0.8"/>
+            <circle cx="28" cy="28" r="6"  stroke="rgba(200,222,255,0.45)" stroke-width="0.8"/>
+            <circle cx="28" cy="28" r="2"  fill="rgba(215,230,255,0.80)"/>
+            <path d="M28 6 L28 50 M6 28 L50 28" stroke="rgba(185,210,245,0.20)" stroke-width="0.5"/>
+          </svg>
+        </div>
+        <div class="entity-right">
+          <p class="entity-headline">
+            A planetary-scale intelligence network for real-time revenue discovery and capture.
+          </p>
+          <p class="entity-body">
+            Oz is the flagship product of Silverpoint Global — a revenue intelligence system
+            unlike anything that has existed before. Where traditional sales tools help you work
+            faster, Oz changes what is visible. It detects economic signals before they become
+            leads, identifies buyers before they know they are buyers, and routes opportunity
+            directly into your pipeline with full intelligence context.
+          </p>
+          <p class="entity-body">
+            The Oz system operates continuously — monitoring billions of global signals, running
+            six autonomous agents in parallel, and delivering a living intelligence layer on top
+            of the global economy. It is not a CRM. It is not a sequencer. It is an intelligence
+            system built for operators who understand what it means to see the market before the market sees itself.
+          </p>
+          <div class="entity-tags">
+            <span class="entity-tag">AI Revenue Intelligence</span>
+            <span class="entity-tag">6 Autonomous Agents</span>
+            <span class="entity-tag">Predictive Forecasting</span>
+            <span class="entity-tag">Signal Acquisition</span>
+            <span class="entity-tag">Pipeline Intelligence</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wolfe Vision Group -->
+      <div class="glass-card entity-card entity-wvg animate-in-scroll delay-2">
+        <div class="entity-left">
+          <span class="entity-num">Entity 03</span>
+          <div class="entity-name"><strong>Wolfe Vision</strong><br>Group</div>
+          <span class="entity-role-tag">Strategic Vision & Advisory</span>
+          <svg class="entity-symbol" viewBox="0 0 56 56" fill="none">
+            <polygon points="28,8 50,42 6,42" stroke="rgba(195,218,248,0.32)" stroke-width="0.8" fill="none"/>
+            <polygon points="28,18 42,38 14,38" stroke="rgba(192,215,248,0.38)" stroke-width="0.8" fill="none"/>
+            <circle cx="28" cy="32" r="4" fill="rgba(205,224,255,0.55)"/>
+            <line x1="28" y1="8" x2="28" y2="18" stroke="rgba(190,212,248,0.28)" stroke-width="0.6"/>
+          </svg>
+        </div>
+        <div class="entity-right">
+          <p class="entity-headline">
+            The strategic vision and advisory layer guiding the Oz ecosystem.
+          </p>
+          <p class="entity-body">
+            Wolfe Vision Group provides the strategic intelligence, market positioning, and
+            long-range vision behind the Oz ecosystem. Where Silverpoint Global builds the
+            technical infrastructure and Oz Intelligence System delivers the operational platform,
+            Wolfe Vision Group shapes the larger strategic narrative — identifying where markets
+            are heading, how AI intelligence systems will redefine competitive advantage, and
+            which operators are positioned to lead.
+          </p>
+          <p class="entity-body">
+            Wolfe Vision Group works directly with Founding Ten operators to develop their
+            strategic intelligence capability and understand how to build their organizations
+            around an AI-native revenue model.
+          </p>
+          <div class="entity-tags">
+            <span class="entity-tag">Strategic Advisory</span>
+            <span class="entity-tag">Market Intelligence</span>
+            <span class="entity-tag">Vision Architecture</span>
+            <span class="entity-tag">Founder Advisory</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ── Mission Quote ──────────────────────────────────── -->
+    <div class="mission-block animate-in-scroll">
+      <p class="mission-quote">
+        "We are building the intelligence layer that transforms how revenue-generating
+        organizations see and interact with the global economy."
+      </p>
+      <span class="mission-attr">Silverpoint Global — Founding Principle</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ── CTA ───────────────────────────────────────────── -->
+    <section class="section" style="text-align:center;">
+      <h2 class="section-headline animate-in-scroll" style="max-width:580px;margin:0 auto 24px;">
+        Join the founding<br><strong>operator network.</strong>
+      </h2>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:16px;" class="animate-in-scroll delay-1">
+        <a href="demo.html" class="btn btn-elite">Request Private Demo</a>
+        <a href="founding-access.html" class="btn btn-ghost">View Access Tiers</a>
+      </div>
+    </section>
+
+    <!-- ── Footer ─────────────────────────────────────────── -->
+    <footer class="oz-footer">
+      <span class="footer-copy">© 2026 Silverpoint Global / Wolfe Vision Group. All rights reserved.</span>
+      <ul class="footer-links">
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="demo.html">Demo Access</a></li>
+      </ul>
+    </footer>
+
+  </div>
+
+  <script src="js/oz-nav.js"></script>
+</body>
+</html>

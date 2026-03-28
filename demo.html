@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Private Demo Access — Oz Intelligence System</title>
+  <meta name="description" content="Request private demo access to the Oz Intelligence Network. NDA required." />
+  <link rel="stylesheet" href="css/oz-web.css" />
+  <style>
+    #bg-canvas {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0; opacity: 0.45;
+    }
+
+    .demo-layout {
+      min-height: calc(100vh - 64px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      align-items: stretch;
+    }
+
+    @media (max-width: 900px) {
+      .demo-layout { grid-template-columns: 1fr; }
+      .demo-left   { display: none; }
+    }
+
+    /* Left panel — briefing intel */
+    .demo-left {
+      position: relative;
+      z-index: 1;
+      padding: 80px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-right: 1px solid rgba(200,215,235,0.08);
+    }
+
+    .intel-tag {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(130,165,215,0.45);
+      margin-bottom: 48px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .intel-tag::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: rgba(160,195,235,0.30);
+    }
+
+    .demo-left h2 {
+      font-family: system-ui,-apple-system,sans-serif;
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 200;
+      color: rgba(215,228,252,0.92);
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      margin-bottom: 24px;
+    }
+
+    .demo-left h2 strong { font-weight: 500; }
+
+    .demo-left p {
+      font-size: 15px;
+      color: rgba(140,165,210,0.60);
+      line-height: 1.70;
+      max-width: 420px;
+      margin-bottom: 48px;
+    }
+
+    /* Qualification criteria */
+    .qual-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .qual-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .qual-num {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: rgba(150,185,230,0.40);
+      padding-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .qual-text {
+      font-size: 14px;
+      color: rgba(170,195,240,0.65);
+      line-height: 1.55;
+    }
+
+    /* Right panel — form */
+    .demo-right {
+      position: relative;
+      z-index: 1;
+      padding: 80px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    @media (max-width: 900px) {
+      .demo-right { padding: 48px 24px; }
+    }
+
+    .form-header {
+      margin-bottom: 40px;
+    }
+
+    .form-header-tag {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(130,160,210,0.45);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .form-header h3 {
+      font-family: system-ui,-apple-system,sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      color: rgba(210,225,250,0.92);
+      letter-spacing: -0.015em;
+    }
+
+    .nda-box {
+      background: rgba(10,16,30,0.70);
+      border: 1px solid rgba(200,215,235,0.10);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-bottom: 8px;
+    }
+
+    .nda-text {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: rgba(130,160,205,0.50);
+      line-height: 1.70;
+    }
+
+    /* Success state */
+    .success-state {
+      text-align: center;
+      padding: 20px;
+      display: none;
+    }
+
+    .success-state.visible { display: block; }
+
+    .success-orb {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(150,215,195,0.30);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: rgba(100,190,165,0.05);
+    }
+
+    .success-orb::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 1px solid rgba(150,215,195,0.12);
+    }
+
+    .success-orb-inner {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(130,210,185,0.80);
+      box-shadow: 0 0 20px rgba(130,210,185,0.5);
+    }
+
+    .success-title {
+      font-family: system-ui,-apple-system,sans-serif;
+      font-size: 26px;
+      font-weight: 300;
+      color: rgba(215,228,252,0.95);
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .success-body {
+      font-size: 15px;
+      color: rgba(145,172,220,0.60);
+      line-height: 1.70;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+
+    .success-tag {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(130,210,185,0.60);
+      margin-top: 28px;
+      display: block;
+    }
+
+    /* Animated scan line */
+    .scan-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(180,210,245,0.25), transparent);
+      pointer-events: none;
+      animation: scanMove 6s linear infinite;
+    }
+
+    @keyframes scanMove {
+      0%   { top: 0%; opacity: 0; }
+      5%   { opacity: 1; }
+      95%  { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- ── Navigation ──────────────────────────────────────── -->
+  <nav class="oz-nav" id="oz-nav">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="14" stroke="rgba(200,218,245,0.35)" stroke-width="0.8"/>
+          <circle cx="16" cy="16" r="9"  stroke="rgba(190,212,245,0.50)" stroke-width="0.8"/>
+          <circle cx="16" cy="16" r="3"  fill="rgba(210,228,255,0.85)"/>
+          <line x1="16" y1="2"  x2="16" y2="7"  stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+          <line x1="16" y1="25" x2="16" y2="30" stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+          <line x1="2"  y1="16" x2="7"  y2="16" stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+          <line x1="25" y1="16" x2="30" y2="16" stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div>
+        <span class="nav-logo-text">OZ</span>
+        <span class="nav-logo-sub">Intelligence System</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="oz-system.html">The System</a></li>
+      <li><a href="founding-access.html">Access</a></li>
+      <li><a href="company.html">Company</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="demo.html" class="nav-cta active">Request Demo</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="demo-layout">
+
+      <!-- ── Left: Intel Panel ──────────────────────────── -->
+      <div class="demo-left">
+        <div class="scan-line"></div>
+
+        <div class="intel-tag">Confidential Briefing Request</div>
+
+        <h2>See what<br><strong>Oz sees.</strong></h2>
+
+        <p>
+          A private demo is the first step toward network access. We walk through the live
+          intelligence system, demonstrate real signal detection, and evaluate fit for
+          a founding seat.
+        </p>
+
+        <ul class="qual-list">
+          <li class="qual-item">
+            <span class="qual-num">01</span>
+            <span class="qual-text">Operators and founders building or scaling revenue-generating businesses</span>
+          </li>
+          <li class="qual-item">
+            <span class="qual-num">02</span>
+            <span class="qual-text">Organizations with existing pipeline infrastructure ready to be accelerated</span>
+          </li>
+          <li class="qual-item">
+            <span class="qual-num">03</span>
+            <span class="qual-text">Decision-makers with authority and vision to deploy intelligence at scale</span>
+          </li>
+          <li class="qual-item">
+            <span class="qual-num">04</span>
+            <span class="qual-text">Businesses operating in markets where signal detection creates measurable advantage</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ── Right: Form ────────────────────────────────── -->
+      <div class="demo-right">
+
+        <div class="form-header">
+          <span class="form-header-tag">
+            <span class="status-dot" style="margin-right:6px;"></span>
+            Demo Access Request — Encrypted
+          </span>
+          <h3>Request Private Demo</h3>
+        </div>
+
+        <!-- Form -->
+        <form class="oz-form" id="demo-form" novalidate>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="form-group">
+              <label class="form-label" for="f-name">Full Name</label>
+              <input class="form-input" id="f-name" name="name" type="text" placeholder="Your name" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="f-company">Company</label>
+              <input class="form-input" id="f-company" name="company" type="text" placeholder="Organization" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f-industry">Industry</label>
+            <input class="form-input" id="f-industry" name="industry" type="text" placeholder="e.g. SaaS, Financial Services, Manufacturing" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f-revenue">Annual Revenue Range</label>
+            <select class="form-select" id="f-revenue" name="revenue" required>
+              <option value="" disabled selected>Select revenue range</option>
+              <option value="<1M">Under $1M</option>
+              <option value="1M-5M">$1M – $5M</option>
+              <option value="5M-20M">$5M – $20M</option>
+              <option value="20M+">$20M+</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f-email">Business Email</label>
+            <input class="form-input" id="f-email" name="email" type="email" placeholder="you@company.com" required />
+          </div>
+
+          <div class="form-group">
+            <div class="nda-box">
+              <p class="nda-text">
+                CONFIDENTIALITY NOTICE — By submitting this form, you acknowledge that all
+                information disclosed during the Oz Intelligence System demo is proprietary
+                and confidential to Silverpoint Global / Wolfe Vision Group, and you agree
+                to hold such information in strict confidence. A formal NDA will be provided
+                prior to the live demonstration.
+              </p>
+            </div>
+            <div class="form-checkbox-group">
+              <input type="checkbox" class="form-checkbox" id="f-nda" name="nda" required />
+              <label class="form-checkbox-label" for="f-nda">
+                I understand this demo is confidential. I agree to hold all disclosed
+                information in strict confidence and execute a formal NDA prior to access.
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-elite" style="width:100%;justify-content:center;margin-top:8px;">
+            Submit &amp; Request Access
+          </button>
+
+          <p style="font-family:'SF Mono','Fira Code',monospace;font-size:10px;letter-spacing:0.12em;color:rgba(130,155,200,0.40);text-align:center;margin-top:14px;">
+            Our team will contact you within 24 hours to arrange your private briefing.
+          </p>
+
+        </form>
+
+        <!-- Success State -->
+        <div class="success-state" id="success-state">
+          <div class="success-orb">
+            <div class="success-orb-inner"></div>
+          </div>
+          <div class="success-title">Access request received.</div>
+          <p class="success-body">
+            Our team will contact you within 24 hours to arrange your private briefing
+            and execute the confidentiality agreement.
+          </p>
+          <span class="success-tag">
+            <span class="status-dot" style="margin-right:8px;"></span>
+            Intelligence Network Standing By
+          </span>
+        </div>
+
+      </div><!-- /demo-right -->
+    </div><!-- /demo-layout -->
+
+    <!-- ── Footer ─────────────────────────────────────────── -->
+    <footer class="oz-footer">
+      <span class="footer-copy">© 2026 Silverpoint Global. All rights reserved. All demo content is confidential.</span>
+      <ul class="footer-links">
+        <li><a href="company.html">Company</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </footer>
+
+  </div>
+
+  <script src="js/oz-nav.js"></script>
+  <script>
+    // Form submission
+    const form    = document.getElementById('demo-form');
+    const success = document.getElementById('success-state');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Basic validation
+      const name    = document.getElementById('f-name').value.trim();
+      const company = document.getElementById('f-company').value.trim();
+      const email   = document.getElementById('f-email').value.trim();
+      const revenue = document.getElementById('f-revenue').value;
+      const nda     = document.getElementById('f-nda').checked;
+
+      if (!name || !company || !email || !revenue || !nda) {
+        // Shake invalid fields
+        form.querySelectorAll(':invalid').forEach(el => {
+          el.style.borderColor = 'rgba(220,160,160,0.45)';
+          setTimeout(() => el.style.borderColor = '', 2000);
+        });
+        if (!nda) {
+          document.getElementById('f-nda').style.outline = '2px solid rgba(220,160,160,0.35)';
+          setTimeout(() => document.getElementById('f-nda').style.outline = '', 2000);
+        }
+        return;
+      }
+
+      // Show success
+      form.style.opacity = '0';
+      form.style.transition = 'opacity 0.4s';
+      setTimeout(() => {
+        form.style.display = 'none';
+        success.classList.add('visible');
+        success.style.opacity = '0';
+        success.style.transition = 'opacity 0.6s';
+        setTimeout(() => success.style.opacity = '1', 50);
+      }, 400);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Oz System — Intelligence Architecture</title>
+  <meta name="description" content="Six autonomous agents. Planetary intelligence. A new category of AI revenue system." />
+  <link rel="stylesheet" href="css/oz-web.css" />
+  <style>
+    /* Background ambient canvas */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* Agent cards */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 52px;
+    }
+
+    @media (max-width: 900px) {
+      .agent-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .agent-grid { grid-template-columns: 1fr; }
+    }
+
+    .agent-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .agent-number {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(130,160,205,0.40);
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .agent-name {
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 20px;
+      font-weight: 500;
+      color: rgba(220,232,252,0.95);
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .agent-role {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(150,185,230,0.55);
+      margin-bottom: 16px;
+    }
+
+    .agent-desc {
+      font-size: 14px;
+      color: rgba(140,165,210,0.65);
+      line-height: 1.65;
+    }
+
+    .agent-indicator {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(100,200,175,0.75);
+      box-shadow: 0 0 10px rgba(100,200,175,0.5);
+      animation: status-pulse 2.5s ease-in-out infinite;
+    }
+
+    /* Intelligence diagram canvas */
+    #intel-canvas {
+      display: block;
+      margin: 60px auto 0;
+      max-width: 700px;
+      width: 100%;
+      height: 400px;
+      border-radius: 14px;
+      border: 1px solid rgba(200,215,235,0.08);
+    }
+
+    /* Process flow */
+    .process-flow {
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+      margin-top: 52px;
+      position: relative;
+    }
+
+    .process-step {
+      flex: 1;
+      padding: 32px 24px;
+      border: 1px solid rgba(200,215,235,0.10);
+      border-left: none;
+      background: rgba(12,18,32,0.55);
+      backdrop-filter: blur(16px);
+      position: relative;
+    }
+
+    .process-step:first-child {
+      border-left: 1px solid rgba(200,215,235,0.10);
+      border-radius: 14px 0 0 14px;
+    }
+
+    .process-step:last-child {
+      border-radius: 0 14px 14px 0;
+    }
+
+    .process-step::after {
+      content: '→';
+      position: absolute;
+      right: -14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: rgba(160,190,230,0.30);
+      z-index: 2;
+    }
+
+    .process-step:last-child::after { display: none; }
+
+    .process-num {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      color: rgba(130,160,205,0.35);
+      margin-bottom: 12px;
+    }
+
+    .process-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(210,225,248,0.88);
+      margin-bottom: 8px;
+    }
+
+    .process-body {
+      font-size: 13px;
+      color: rgba(140,165,210,0.55);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 800px) {
+      .process-flow { flex-direction: column; }
+      .process-step { border-left: 1px solid rgba(200,215,235,0.10) !important; border-top: none; border-radius: 0 !important; }
+      .process-step:first-child { border-top: 1px solid rgba(200,215,235,0.10); border-radius: 14px 14px 0 0 !important; }
+      .process-step:last-child { border-radius: 0 0 14px 14px !important; }
+      .process-step::after { content:'↓'; right:50%; top:auto; bottom:-14px; transform:translateX(50%); }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- ── Navigation ──────────────────────────────────────── -->
+  <nav class="oz-nav" id="oz-nav">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="14" stroke="rgba(200,218,245,0.35)" stroke-width="0.8"/>
+          <circle cx="16" cy="16" r="9"  stroke="rgba(190,212,245,0.50)" stroke-width="0.8"/>
+          <circle cx="16" cy="16" r="3"  fill="rgba(210,228,255,0.85)"/>
+          <line x1="16" y1="2"  x2="16" y2="7"  stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+          <line x1="16" y1="25" x2="16" y2="30" stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+          <line x1="2"  y1="16" x2="7"  y2="16" stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+          <line x1="25" y1="16" x2="30" y2="16" stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div>
+        <span class="nav-logo-text">OZ</span>
+        <span class="nav-logo-sub">Intelligence System</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="oz-system.html" class="active">The System</a></li>
+      <li><a href="founding-access.html">Access</a></li>
+      <li><a href="company.html">Company</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="demo.html" class="nav-cta">Request Demo</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ── Page Hero ─────────────────────────────────────── -->
+    <div class="page-hero">
+      <div class="section-label">Intelligence Architecture</div>
+      <h1 class="section-headline animate-in">
+        Six agents.<br><strong>One unified intelligence.</strong>
+      </h1>
+      <p class="section-sub animate-in delay-1">
+        Oz is not a tool. It is an operating system for revenue — a planetary-scale intelligence
+        network that monitors, predicts, and captures economic opportunity in real time.
+      </p>
+    </div>
+
+    <div class="accent-line"></div>
+
+    <!-- ── Agent Network ──────────────────────────────────── -->
+    <section class="section">
+      <div class="section-label">The Agent Network</div>
+      <h2 class="section-headline animate-in-scroll">
+        Six autonomous agents.<br><strong>Always running.</strong>
+      </h2>
+
+      <div class="agent-grid">
+
+        <div class="glass-card agent-card animate-in-scroll">
+          <div class="agent-indicator"></div>
+          <span class="agent-number">Agent 01</span>
+          <div class="agent-name">Signal Agent</div>
+          <div class="agent-role">Economic Signal Acquisition</div>
+          <p class="agent-desc">Continuously scans billions of global economic data points — news, filings, hiring patterns, funding events, partnerships, and behavioral signals — to detect emerging opportunities at the edge of visibility.</p>
+        </div>
+
+        <div class="glass-card agent-card animate-in-scroll delay-1">
+          <div class="agent-indicator" style="animation-delay:0.4s;"></div>
+          <span class="agent-number">Agent 02</span>
+          <div class="agent-name">Research Agent</div>
+          <div class="agent-role">Deep Intelligence Synthesis</div>
+          <p class="agent-desc">Takes raw signals and builds dense intelligence profiles on companies, founders, industries, and markets. Surfaces the context needed to convert a signal into a qualified opportunity.</p>
+        </div>
+
+        <div class="glass-card agent-card animate-in-scroll delay-2">
+          <div class="agent-indicator" style="animation-delay:0.8s;"></div>
+          <span class="agent-number">Agent 03</span>
+          <div class="agent-name">Campaign Agent</div>
+          <div class="agent-role">Strategic Campaign Execution</div>
+          <p class="agent-desc">Designs and executes precision outreach campaigns tailored to each opportunity profile. Adapts messaging, timing, and sequencing based on real-time intelligence feedback.</p>
+        </div>
+
+        <div class="glass-card agent-card animate-in-scroll delay-1">
+          <div class="agent-indicator" style="animation-delay:1.2s;"></div>
+          <span class="agent-number">Agent 04</span>
+          <div class="agent-name">Enrichment Agent</div>
+          <div class="agent-role">Contact & Data Enrichment</div>
+          <p class="agent-desc">Fills every intelligence gap — contact data, organizational structure, decision-maker mapping, technology stack, intent signals — so every outreach arrives fully informed.</p>
+        </div>
+
+        <div class="glass-card agent-card animate-in-scroll delay-2">
+          <div class="agent-indicator" style="animation-delay:1.6s;"></div>
+          <span class="agent-number">Agent 05</span>
+          <div class="agent-name">Outreach Agent</div>
+          <div class="agent-role">Intelligent Engagement</div>
+          <p class="agent-desc">Deploys multi-channel outreach with intelligence-driven personalization. Monitors response patterns and adapts sequences in real time to maximize engagement velocity.</p>
+        </div>
+
+        <div class="glass-card agent-card animate-in-scroll delay-3">
+          <div class="agent-indicator" style="animation-delay:2.0s;"></div>
+          <span class="agent-number">Agent 06</span>
+          <div class="agent-name">Analytics Agent</div>
+          <div class="agent-role">Intelligence & Learning Engine</div>
+          <p class="agent-desc">Measures performance across every dimension, feeds learning back into the system, and continuously improves signal quality, opportunity scoring, and conversion rates over time.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ── Intelligence Diagram ───────────────────────────── -->
+    <section class="section">
+      <div class="section-label">System Architecture</div>
+      <h2 class="section-headline animate-in-scroll">
+        The <strong>Intelligence Core.</strong>
+      </h2>
+      <p class="section-sub animate-in-scroll delay-1">
+        All six agents are coordinated by the Oz Intelligence Core — a central orchestration layer
+        that routes signals, resolves conflicts, prioritizes opportunities, and maintains
+        the full intelligence context of your revenue ecosystem.
+      </p>
+
+      <canvas id="intel-canvas" aria-label="Intelligence architecture diagram"></canvas>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ── Process Flow ───────────────────────────────────── -->
+    <section class="section">
+      <div class="section-label">The Oz Process</div>
+      <h2 class="section-headline animate-in-scroll">From <strong>signal to close.</strong></h2>
+
+      <div class="process-flow">
+        <div class="process-step">
+          <div class="process-num">01</div>
+          <div class="process-title">Signal Detection</div>
+          <p class="process-body">Oz detects a weak economic signal — a company growing fast, a market shifting, a buyer entering a decision window.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">02</div>
+          <div class="process-title">Intelligence Build</div>
+          <p class="process-body">Research and Enrichment agents build a dense profile — company, contacts, context, timing, and competitive landscape.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">03</div>
+          <div class="process-title">Opportunity Score</div>
+          <p class="process-body">The Intelligence Core scores and prioritizes — routing only the highest-probability opportunities to your pipeline.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">04</div>
+          <div class="process-title">Engagement</div>
+          <p class="process-body">Campaign and Outreach agents execute precision engagement with full context, optimal timing, and adaptive sequencing.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">05</div>
+          <div class="process-title">Revenue Capture</div>
+          <p class="process-body">Deal intelligence guides every stage to close. Analytics agent feeds learning back, improving the entire cycle.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ── CTA ───────────────────────────────────────────── -->
+    <section class="section" style="text-align:center;">
+      <h2 class="section-headline animate-in-scroll" style="max-width:600px;margin:0 auto 24px;">
+        Ready to see the<br><strong>system in action?</strong>
+      </h2>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:16px;" class="animate-in-scroll delay-1">
+        <a href="demo.html" class="btn btn-elite">Request Private Demo</a>
+        <a href="founding-access.html" class="btn btn-ghost">View Access Tiers</a>
+      </div>
+    </section>
+
+    <!-- ── Footer ────────────────────────────────────────── -->
+    <footer class="oz-footer">
+      <span class="footer-copy">© 2026 Silverpoint Global. All rights reserved.</span>
+      <ul class="footer-links">
+        <li><a href="company.html">Company</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="demo.html">Demo Access</a></li>
+      </ul>
+    </footer>
+
+  </div><!-- /page-wrapper -->
+
+  <script src="js/oz-nav.js"></script>
+  <script>
+  // Intelligence Diagram Canvas
+  (function(){
+    const canvas = document.getElementById('intel-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const DPR = Math.min(window.devicePixelRatio||1, 2);
+
+    function resize() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width  = rect.width  * DPR;
+      canvas.height = rect.height * DPR;
+      ctx.scale(DPR, DPR);
+    }
+
+    let W, H, CX, CY, t = 0;
+    const agents = [
+      {name:'SIGNAL',    color:'rgba(180,215,255,0.80)'},
+      {name:'RESEARCH',  color:'rgba(165,205,248,0.70)'},
+      {name:'CAMPAIGN',  color:'rgba(195,222,255,0.75)'},
+      {name:'ENRICHMENT',color:'rgba(155,195,240,0.70)'},
+      {name:'OUTREACH',  color:'rgba(175,210,250,0.75)'},
+      {name:'ANALYTICS', color:'rgba(190,218,255,0.75)'},
+    ];
+
+    function draw() {
+      t++;
+      const rect = canvas.getBoundingClientRect();
+      W = rect.width; H = rect.height; CX = W/2; CY = H/2;
+      ctx.clearRect(0,0,W,H);
+
+      // BG
+      const bg = ctx.createRadialGradient(CX,CY,0,CX,CY,Math.max(W,H)*0.6);
+      bg.addColorStop(0,'rgba(14,24,48,0.9)');
+      bg.addColorStop(1,'rgba(4,8,18,0.97)');
+      ctx.fillStyle=bg;
+      ctx.fillRect(0,0,W,H);
+
+      const R = Math.min(W,H)*0.36;
+
+      // Orbit rings
+      [1,0.72,0.48].forEach((s,i)=>{
+        ctx.beginPath();
+        ctx.ellipse(CX,CY,R*s,R*s*0.38,0,0,Math.PI*2);
+        ctx.strokeStyle=`rgba(180,210,240,${0.06*(3-i)})`;
+        ctx.lineWidth=0.6;
+        ctx.setLineDash([4,8]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      });
+
+      // Core hexagram
+      for(let tri=0;tri<2;tri++){
+        const rot=(Math.PI/6)*(tri*2)+t*(tri===0?0.004:-0.005);
+        ctx.beginPath();
+        for(let v=0;v<3;v++){
+          const a=rot+(Math.PI*2/3)*v;
+          const px=CX+Math.cos(a)*R*0.28;
+          const py=CY+Math.sin(a)*R*0.28;
+          if(v===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);
+        }
+        ctx.closePath();
+        ctx.strokeStyle=`rgba(195,220,255,0.35)`;
+        ctx.lineWidth=0.9;
+        ctx.stroke();
+      }
+
+      // Core glow
+      const cg=ctx.createRadialGradient(CX,CY,0,CX,CY,R*0.18);
+      cg.addColorStop(0,'rgba(200,225,255,0.75)');
+      cg.addColorStop(1,'rgba(160,200,245,0)');
+      ctx.beginPath();
+      ctx.arc(CX,CY,R*0.18,0,Math.PI*2);
+      ctx.fillStyle=cg;
+      ctx.fill();
+
+      ctx.font=`9px SF Mono, Fira Code, monospace`;
+      ctx.fillStyle='rgba(140,170,215,0.55)';
+      ctx.textAlign='center';
+      ctx.fillText('INTELLIGENCE CORE',CX,CY+R*0.30);
+
+      // Agents
+      agents.forEach((ag,i)=>{
+        const angle=(Math.PI*2/6)*i - Math.PI/2 + t*0.003;
+        const ax=CX+Math.cos(angle)*R;
+        const ay=CY+Math.sin(angle)*R*0.55;
+
+        // Connection
+        const pulseT=((t*0.015+i/6)%1);
+        const ppx=CX+(ax-CX)*pulseT;
+        const ppy=CY+(ay-CY)*pulseT;
+
+        ctx.beginPath();
+        ctx.moveTo(CX,CY);
+        ctx.lineTo(ax,ay);
+        ctx.strokeStyle='rgba(170,205,240,0.10)';
+        ctx.lineWidth=0.5;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(ppx,ppy,2,0,Math.PI*2);
+        ctx.fillStyle='rgba(200,225,255,0.55)';
+        ctx.fill();
+
+        // Agent glow
+        const ag2=ctx.createRadialGradient(ax,ay,0,ax,ay,20);
+        ag2.addColorStop(0,ag.color);
+        ag2.addColorStop(1,'rgba(160,200,240,0)');
+        ctx.beginPath();
+        ctx.arc(ax,ay,20,0,Math.PI*2);
+        ctx.fillStyle=ag2;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(ax,ay,4,0,Math.PI*2);
+        ctx.fillStyle='rgba(220,235,255,0.9)';
+        ctx.fill();
+
+        // Status dot
+        ctx.beginPath();
+        ctx.arc(ax+8,ay-8,3,0,Math.PI*2);
+        ctx.fillStyle=`rgba(100,200,175,${0.5+0.4*Math.sin(t*0.05+i)})`;
+        ctx.fill();
+
+        // Label
+        const lx=CX+(ax-CX)*1.22;
+        const ly=CY+(ay-CY)*1.22;
+        ctx.font='9px SF Mono, Fira Code, monospace';
+        ctx.fillStyle='rgba(155,185,228,0.60)';
+        ctx.textAlign='center';
+        ctx.fillText(ag.name,lx,ly);
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    resize();
+    window.addEventListener('resize',resize,{passive:true});
+    draw();
+  })();
+  </script>
+</body>
+</html>

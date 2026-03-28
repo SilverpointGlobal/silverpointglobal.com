@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Founding Access — Oz Intelligence Network</title>
+  <meta name="description" content="Two tiers of access to the Oz Intelligence Network. Limited seats available globally." />
+  <link rel="stylesheet" href="css/oz-web.css" />
+  <style>
+    #bg-canvas {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0; opacity: 0.5;
+    }
+
+    .access-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-top: 60px;
+      align-items: start;
+    }
+
+    @media (max-width: 800px) {
+      .access-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Elite card */
+    .card-elite {
+      background: rgba(14, 22, 44, 0.75);
+      border-color: rgba(200, 220, 248, 0.22);
+      box-shadow:
+        0 0 80px rgba(150,190,235,0.10),
+        0 0 30px rgba(150,190,235,0.05),
+        inset 0 0 40px rgba(150,190,235,0.025);
+    }
+
+    .card-elite::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 15px;
+      background: linear-gradient(145deg, rgba(200,220,250,0.12) 0%, transparent 50%, rgba(160,200,240,0.06) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .card-elite > * { position: relative; z-index: 1; }
+
+    .elite-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(195,218,252,0.85);
+      border: 1px solid rgba(195,218,252,0.25);
+      background: rgba(160,200,245,0.07);
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 32px;
+    }
+
+    .seat-counter {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .seat-num {
+      font-family: system-ui,-apple-system,sans-serif;
+      font-size: 72px;
+      font-weight: 100;
+      color: rgba(215,228,252,0.95);
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .seat-label {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(150,180,225,0.55);
+    }
+
+    .pricing-note {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: rgba(140,170,215,0.50);
+      margin-top: 4px;
+    }
+
+    /* Include list — elite style */
+    .include-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 28px 0 32px;
+    }
+
+    .include-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14px;
+      color: rgba(175,200,240,0.75);
+      line-height: 1.5;
+    }
+
+    .include-list li .il-icon {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      opacity: 0.7;
+    }
+
+    .il-check {
+      color: rgba(150,215,195,0.85);
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Governance badge */
+    .governance-tag {
+      display: inline-block;
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(155,190,235,0.65);
+      border: 1px solid rgba(155,190,235,0.15);
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+
+    /* Scarcity bar */
+    .scarcity-bar-wrap {
+      margin: 16px 0 24px;
+    }
+
+    .scarcity-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: rgba(140,170,215,0.45);
+      margin-bottom: 8px;
+    }
+
+    .scarcity-bar-bg {
+      height: 3px;
+      background: rgba(200,218,240,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .scarcity-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, rgba(180,210,245,0.5), rgba(210,228,255,0.85));
+      animation: barFill 2s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    @keyframes barFill {
+      from { width: 0; }
+    }
+
+    /* Bottom CTA section */
+    .cta-center {
+      text-align: center;
+      padding: 80px 40px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Comparison table */
+    .compare-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 48px;
+    }
+
+    .compare-table th,
+    .compare-table td {
+      padding: 16px 20px;
+      text-align: left;
+      border-bottom: 1px solid rgba(200,215,235,0.07);
+    }
+
+    .compare-table thead th {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(140,165,210,0.50);
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(200,215,235,0.12);
+    }
+
+    .compare-table tbody td {
+      font-size: 14px;
+      color: rgba(170,195,235,0.65);
+    }
+
+    .compare-table tbody td:first-child {
+      font-size: 13px;
+      color: rgba(140,165,210,0.50);
+    }
+
+    .check-yes { color: rgba(130,210,185,0.85); font-size: 15px; }
+    .check-no  { color: rgba(120,140,175,0.35); font-size: 15px; }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- ── Navigation ──────────────────────────────────────── -->
+  <nav class="oz-nav" id="oz-nav">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="14" stroke="rgba(200,218,245,0.35)" stroke-width="0.8"/>
+          <circle cx="16" cy="16" r="9"  stroke="rgba(190,212,245,0.50)" stroke-width="0.8"/>
+          <circle cx="16" cy="16" r="3"  fill="rgba(210,228,255,0.85)"/>
+          <line x1="16" y1="2"  x2="16" y2="7"  stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+          <line x1="16" y1="25" x2="16" y2="30" stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+          <line x1="2"  y1="16" x2="7"  y2="16" stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+          <line x1="25" y1="16" x2="30" y2="16" stroke="rgba(200,220,248,0.50)" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div>
+        <span class="nav-logo-text">OZ</span>
+        <span class="nav-logo-sub">Intelligence System</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="oz-system.html">The System</a></li>
+      <li><a href="founding-access.html" class="active">Access</a></li>
+      <li><a href="company.html">Company</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="demo.html" class="nav-cta">Request Demo</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ── Page Hero ─────────────────────────────────────── -->
+    <div class="page-hero">
+      <div class="section-label">Network Access</div>
+      <h1 class="section-headline animate-in">
+        Access the Oz<br><strong>Intelligence Network.</strong>
+      </h1>
+      <p class="section-sub animate-in delay-1">
+        A new category of AI system designed to discover and capture revenue opportunities
+        across the global economy. Two tiers of access. Both strictly limited.
+      </p>
+    </div>
+
+    <div class="accent-line"></div>
+
+    <!-- ── Access Cards ───────────────────────────────────── -->
+    <section class="section">
+      <div class="access-grid">
+
+        <!-- ── TIER 1: The Founding Ten ─────────────────── -->
+        <div class="glass-card card-elite pricing-card pricing-card--elite animate-in-scroll">
+
+          <div class="elite-badge">
+            <span class="status-dot"></span>
+            THE FOUNDING TEN
+          </div>
+
+          <div class="seat-counter">
+            <span class="seat-num">10</span>
+            <span class="seat-label">Seats<br>Global Total</span>
+          </div>
+
+          <div class="scarcity-bar-wrap">
+            <div class="scarcity-bar-label">
+              <span>Seats Available</span>
+              <span>Strictly Limited</span>
+            </div>
+            <div class="scarcity-bar-bg">
+              <div class="scarcity-bar-fill" style="width:72%;"></div>
+            </div>
+          </div>
+
+          <div class="pricing-price">$100,000</div>
+          <div class="pricing-price-sub">INITIAL COMMITMENT + $10,000 / MONTH</div>
+
+          <div class="pricing-divider"></div>
+
+          <ul class="include-list">
+            <li><span class="il-check">✓</span> Full Oz Intelligence Platform access</li>
+            <li><span class="il-check">✓</span> Governance influence over Oz development</li>
+            <li><span class="il-check">✓</span> Private strategic intelligence briefings</li>
+            <li><span class="il-check">✓</span> Highest intelligence priority routing</li>
+            <li><span class="il-check">✓</span> Legacy pricing protection</li>
+            <li><span class="il-check">✓</span> Direct access to founding team</li>
+            <li><span class="il-check">✓</span> Early access to all new capabilities</li>
+            <li><span class="il-check">✓</span> Dedicated intelligence concierge</li>
+          </ul>
+
+          <div style="margin-bottom:20px;">
+            <span class="governance-tag">Governance Rights</span>
+            <span class="governance-tag">Strategic Briefings</span>
+            <span class="governance-tag">Priority Access</span>
+            <span class="governance-tag">Legacy Pricing</span>
+          </div>
+
+          <a href="demo.html" class="btn btn-elite" style="width:100%;justify-content:center;">
+            Apply for Founding Seat
+          </a>
+
+          <p class="pricing-note" style="margin-top:14px;text-align:center;">
+            Admission by qualification only. Request a private briefing to begin.
+          </p>
+        </div>
+
+        <!-- ── TIER 2: Founding Operator Seat ───────────── -->
+        <div class="glass-card pricing-card animate-in-scroll delay-1">
+
+          <div class="pricing-tier-badge">Founding Operator Seat</div>
+
+          <div class="pricing-price">$25,000</div>
+          <div class="pricing-price-sub">SETUP + $5,000 / MONTH</div>
+
+          <div class="pricing-divider"></div>
+
+          <ul class="include-list">
+            <li><span class="il-check">✓</span> Full Oz Intelligence Platform access</li>
+            <li><span class="il-check">✓</span> Opportunity Discovery Engine</li>
+            <li><span class="il-check">✓</span> All 6 AI agent automations</li>
+            <li><span class="il-check">✓</span> Predictive intelligence tools</li>
+            <li><span class="il-check">✓</span> Deal pipeline intelligence</li>
+            <li><span class="il-check">✓</span> Priority feature releases</li>
+            <li><span class="il-check">✓</span> Onboarding and integration support</li>
+            <li><span class="il-check">✓</span> Founding operator pricing locked</li>
+          </ul>
+
+          <a href="demo.html" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px;">
+            Request Private Demo
+          </a>
+
+          <p class="pricing-note" style="margin-top:14px;text-align:center;">
+            Founding operator pricing applies while seats remain. Subject to qualification.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ── Comparison Table ───────────────────────────────── -->
+    <section class="section">
+      <div class="section-label">Capability Comparison</div>
+      <h2 class="section-headline animate-in-scroll">What's <strong>included.</strong></h2>
+
+      <div class="glass-card" style="padding:0;overflow:hidden;margin-top:0;">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th style="width:40%;">Capability</th>
+              <th>The Founding Ten</th>
+              <th>Founding Operator</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Full Intelligence Platform</td>
+              <td><span class="check-yes">✓</span></td>
+              <td><span class="check-yes">✓</span></td>
+            </tr>
+            <tr>
+              <td>6 AI Agent Network</td>
+              <td><span class="check-yes">✓</span></td>
+              <td><span class="check-yes">✓</span></td>
+            </tr>
+            <tr>
+              <td>Opportunity Discovery Engine</td>
+              <td><span class="check-yes">✓</span></td>
+              <td><span class="check-yes">✓</span></td>
+            </tr>
+            <tr>
+              <td>Predictive Intelligence</td>
+              <td><span class="check-yes">✓</span></td>
+              <td><span class="check-yes">✓</span></td>
+            </tr>
+            <tr>
+              <td>Deal Pipeline Intelligence</td>
+              <td><span class="check-yes">✓</span></td>
+              <td><span class="check-yes">✓</span></td>
+            </tr>
+            <tr>
+              <td>Priority Feature Releases</td>
+              <td><span class="check-yes">✓</span></td>
+              <td><span class="check-yes">✓</span></td>
+            </tr>
+            <tr>
+              <td>Governance Influence</td>
+              <td><span class="check-yes">✓</span></td>
+              <td><span class="check-no">—</span></td>
+            </tr>
+            <tr>
+              <td>Private Strategic Briefings</td>
+              <td><span class="check-yes">✓</span></td>
+              <td><span class="check-no">—</span></td>
+            </tr>
+            <tr>
+              <td>Highest Intelligence Priority</td>
+              <td><span class="check-yes">✓</span></td>
+              <td><span class="check-no">—</span></td>
+            </tr>
+            <tr>
+              <td>Legacy Pricing Protection</td>
+              <td><span class="check-yes">✓</span></td>
+              <td><span class="check-no">—</span></td>
+            </tr>
+            <tr>
+              <td>Dedicated Intelligence Concierge</td>
+              <td><span class="check-yes">✓</span></td>
+              <td><span class="check-no">—</span></td>
+            </tr>
+            <tr style="border-bottom:none;">
+              <td>Direct Founding Team Access</td>
+              <td><span class="check-yes">✓</span></td>
+              <td><span class="check-no">—</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ── Bottom CTA ─────────────────────────────────────── -->
+    <div class="cta-center animate-in-scroll">
+      <div class="section-label" style="justify-content:center;">Next Step</div>
+      <h2 class="section-headline" style="margin-bottom:16px;">
+        Begin with a<br><strong>private demo.</strong>
+      </h2>
+      <p class="section-sub" style="margin:0 auto 40px;text-align:center;">
+        Every access relationship begins with a confidential briefing. We qualify all applicants
+        to ensure Oz is deployed where it creates the highest impact.
+      </p>
+      <a href="demo.html" class="btn btn-elite">Request Private Demo</a>
+    </div>
+
+    <!-- ── Footer ─────────────────────────────────────────── -->
+    <footer class="oz-footer">
+      <span class="footer-copy">© 2026 Silverpoint Global. All rights reserved.</span>
+      <ul class="footer-links">
+        <li><a href="company.html">Company</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="demo.html">Demo Access</a></li>
+      </ul>
+    </footer>
+
+  </div>
+
+  <script src="js/oz-nav.js"></script>
+</body>
+</html>
